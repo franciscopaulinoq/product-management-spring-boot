@@ -21,7 +21,7 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Product> addProduct(@RequestBody Product product) {
-        Optional<Product> productFound = products.stream().filter(productFind -> productFind.getId().equals(product.getId())).findFirst();
+        Optional<Product> productFound = products.stream().filter(currentProduct -> currentProduct.getId().equals(product.getId())).findFirst();
         if (productFound.isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(productFound.get());
         }
@@ -33,16 +33,16 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable Long id) {
-        Optional<Product> product = products.stream().filter(productFind -> productFind.getId().equals(id)).findFirst();
-        if (product.isPresent()) {
-            return ResponseEntity.ok(product.get());
+        Optional<Product> productFound = products.stream().filter(currentProduct -> currentProduct.getId().equals(id)).findFirst();
+        if (productFound.isPresent()) {
+            return ResponseEntity.ok(productFound.get());
         }
         return ResponseEntity.notFound().build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product) {
-        Optional<Product> productFound = products.stream().filter(productFind -> productFind.getId().equals(id)).findFirst();
+        Optional<Product> productFound = products.stream().filter(currentProduct -> currentProduct.getId().equals(id)).findFirst();
         if (productFound.isPresent()) {
             productFound.get().setName(product.getName());
             productFound.get().setPrice(product.getPrice());
@@ -54,9 +54,9 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        Optional<Product> product = products.stream().filter(productFind -> productFind.getId().equals(id)).findFirst();
-        if (product.isPresent()) {
-            products.remove(product.get());
+        Optional<Product> productFound = products.stream().filter(currentProduct -> currentProduct.getId().equals(id)).findFirst();
+        if (productFound.isPresent()) {
+            products.remove(productFound.get());
             return ResponseEntity
                     .status(HttpStatus.NO_CONTENT)
                     .build();
@@ -66,7 +66,7 @@ public class ProductController {
 
     @GetMapping("/search")
     public ResponseEntity<List<Product>> searchProduct(@RequestParam String name) {
-        List<Product> productsFinds = new ArrayList<>(products.stream().filter(product -> product.getName().contains(name)).toList());
+        List<Product> productsFinds = new ArrayList<>(products.stream().filter(currentProduct -> currentProduct.getName().contains(name)).toList());
         return ResponseEntity.ok(productsFinds);
     }
 }
